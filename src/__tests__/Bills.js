@@ -18,6 +18,29 @@ describe("Given I am connected as an employee", () => {
       const bills = await billsContainer.getBills()
       expect(bills.length).toBe(4)
     })
+    test('Then, if corrupted data was introduced, the error is logged and unformatted date is returned', async () => {
+      const corruptedStore = {
+        bills() {
+          return {
+            list() {
+              return Promise.resolve([
+                {
+                  id: "47qAXb6fIm2zOKkLzMro",
+                  date: "invalid-date-format",
+                  status: "anything",
+                },
+              ]);
+            },
+          };
+        },
+      };
+      const billsContainer = new Bills({ document, onNavigate: null, store: corruptedStore, localStorage: null })
+      const spyConsoleLog = jest.spyOn(console, "log")
+      const result = await billsContainer.getBills()
+      expect(spyConsoleLog).toHaveBeenCalled();
+      expect(result[0].date).toEqual("invalid-date-format");
+      expect(result[0].status).toEqual(undefined);
+    })
     test("Then bill icon in vertical layout should be highlighted", async () => {
 
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
