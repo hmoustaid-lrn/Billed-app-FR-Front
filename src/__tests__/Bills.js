@@ -2,12 +2,13 @@
  * @jest-environment jsdom
  */
 
-import {screen, waitFor} from "@testing-library/dom"
+import { fireEvent, screen, waitFor } from "@testing-library/dom"
+import Bills from "../containers/Bills.js"
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
-import { ROUTES_PATH} from "../constants/routes.js";
-import {localStorageMock} from "../__mocks__/localStorage.js";
-
+import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
+import { localStorageMock } from "../__mocks__/localStorage.js";
+import mockStore from "../__mocks__/store"
 import router from "../app/Router.js";
 
 describe("Given I am connected as an employee", () => {
@@ -34,6 +35,17 @@ describe("Given I am connected as an employee", () => {
       const antiChrono = (a, b) => ((a < b) ? -1 : 1)
       const datesSorted = [...dates].sort(antiChrono)
       expect(dates).toEqual(datesSorted)
+    })
+  })
+  describe('When I click on an eye icon', () => {
+    test('Then, the modal should be display', () => {
+      document.body.innerHTML = BillsUI({ data: bills })
+      const billsContainer = new Bills({ document, onNavigate: null, store: null, localStorage: null })
+      const modalMock = jest.fn()
+      $.fn.modal = modalMock
+      const iconEye0 = screen.getAllByTestId("icon-eye")[0]
+      fireEvent.click(iconEye0)
+      expect(modalMock).toHaveBeenCalledWith('show')
     })
   })
 })
