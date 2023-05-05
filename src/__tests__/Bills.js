@@ -48,4 +48,14 @@ describe("Given I am connected as an employee", () => {
       expect(modalMock).toHaveBeenCalledWith('show')
     })
   })
+  describe('When I click on the new bill button', () => {
+    test('Then, should navigate to the NewBill page', () => {
+      document.body.innerHTML = BillsUI({ data: bills })
+      const onNavigate = (pathname) => document.body.innerHTML = ROUTES({ pathname })
+      const billsContainer = new Bills({ document, onNavigate, store: null, localStorage: null })
+      const newBillButton = screen.getByTestId('btn-new-bill')
+      fireEvent.click(newBillButton)
+      expect(screen.queryByTestId('form-new-bill')).toBeTruthy()
+    })
+  })
 })
