@@ -13,6 +13,11 @@ import router from "../app/Router.js";
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
+    test('Then, getBills should return 4 bills', async () => {
+      const billsContainer = new Bills({ document, onNavigate: null, store: mockStore, localStorage: null })
+      const bills = await billsContainer.getBills()
+      expect(bills.length).toBe(4)
+    })
     test("Then bill icon in vertical layout should be highlighted", async () => {
 
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
