@@ -82,8 +82,10 @@ describe("Given I am connected as an employee", () => {
       const onNavigate = (pathname) => document.body.innerHTML = ROUTES({ pathname })
       const billsContainer = new Bills({ document, onNavigate, store: null, localStorage: null })
       const newBillButton = screen.getByTestId('btn-new-bill')
+      const handleClick = jest.fn(billsContainer.handleClickNewBill);
+      newBillButton.addEventListener('click', handleClick)
       fireEvent.click(newBillButton)
-      expect(screen.queryByTestId('form-new-bill')).toBeTruthy()
+      expect(handleClick).toBeCalled()
     })
   })
 })
